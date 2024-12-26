@@ -1,11 +1,110 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Management</title>
+  <style>
+    nav a { margin: 10px; text-decoration: none; }
+    form, .questions-container { max-width: 500px; margin: auto; }
+    form { display: flex; flex-direction: column; }
+    input, button { margin: 10px 0; padding: 10px; }
+    .question-card { border: 1px solid #000; padding: 10px; margin: 10px 0; }
+    .question-card.violet { border-color: violet; }
+  </style>
 </head>
 <body>
-    
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="quiz.html">Quiz</a>
+    <a href="questions.html">Questions</a>
+  </nav>
+
+  <form id="quiz-form">
+    <h1>Add New Quiz Question</h1>
+    <input type="text" id="question" placeholder="Question Statement" required>
+    <input type="text" id="optionA" placeholder="Option A" required>
+    <input type="text" id="optionB" placeholder="Option B" required>
+    <input type="text" id="optionC" placeholder="Option C" required>
+    <input type="text" id="optionD" placeholder="Option D" required>
+    <input type="text" id="correctOption" placeholder="Correct Option" required>
+    <button type="submit">Add Question</button>
+  </form>
+
+  <div class="questions-container" id="questions-container"></div>
+
+  <script>
+    const BASE_URL = "http://localhost:3000/questions";
+
+    // Add a new question
+    document.getElementById('quiz-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const questionData = {
+        question: document.getElementById('question').value,
+        optionA: document.getElementById('optionA').value,
+        optionB: document.getElementById('optionB').value,
+        optionC: document.getElementById('optionC').value,
+        optionD: document.getElementById('optionD').value,
+        correctOption: document.getElementById('correctOption').value,
+        reviewStatus: false
+      };
+
+      await fetch(BASE_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(questionData)
+      });
+
+      alert("Question Created");
+      loadQuestions();
+    });
+
+    // Load all questions
+    async function loadQuestions() {
+      const response = await fetch(BASE_URL);
+      const questions = await response.json();
+      const container = document.getElementById('questions-container');
+      container.innerHTML = '';
+
+      questions.forEach((q) => {
+        const questionCard = document.createElement('div');
+        questionCard.className = `question-card ${q.reviewStatus ? 'violet' : ''}`;
+        questionCard.innerHTML = `
+          <p><strong>Question:</strong> ${q.question}</p>
+          <p>A: ${q.optionA}</p>
+          <p>B: ${q.optionB}</p>
+          <p>C: ${q.optionC}</p>
+          <p>D: ${q.optionD}</p>
+          <button onclick="reviewQuestion(${q.id})">Review</button>
+          <button onclick="deleteQuestion(${q.id})">Delete</button>
+        `;
+        container.appendChild(questionCard);
+      });
+    }
+
+    // Review a question
+    async function reviewQuestion(id) {
+      const confirmReview = confirm("Are you sure to review this question?");
+      if (confirmReview) {
+        await fetch(`${BASE_URL}/${id}`, {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ reviewStatus: true })
+        });
+        loadQuestions();
+      }
+    }
+
+    // Delete a question
+    async function deleteQuestion(id) {
+      const confirmDelete = confirm("Are you sure to delete this question?");
+      if (confirmDelete) {
+        await fetch(`${BASE_URL}/${id}`, { method: "DELETE" });
+        loadQuestions();
+      }
+    }
+
+    loadQuestions();
+  </script>
 </body>
 </html>

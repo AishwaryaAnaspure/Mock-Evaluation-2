@@ -1,51 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
-    <style>
-        nav a {
-            margin: 10px; text-decoration: none;
-        }
-        form { display: flex; flex-direction: column; max-width: 300px; margin: auto; }
-        input{margin: 10px 0; padding: 10px;}
-
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    nav a { margin: 10px; text-decoration: none; }
+    form { display: flex; flex-direction: column; max-width: 300px; margin: auto; }
+    input { margin: 10px 0; padding: 10px; }
+  </style>
 </head>
-
 <body>
-    <nav>
-        <a href="index.html"> Home </a>
-        <a href="quiz.html"> Quiz </a>
-        <a href="questions.html"> Questions </a>
-    </nav>
-    <form id="login-form">
-        <h1>login</h1>
-        <input type="email" id="email" placeholder="Email" required>
-        <input type="password" id="password" placeholder="Password" required>
-        <button type="submit"> Login</button>
-    </form>
-    <script>
-        const validCredentials = {
-            email: "empher@gmail.com", password: "empher@123"
-        };
-        document.getElementById('login-form').addEventListener('submit', (e)) => {
-            e.preventDefault();
-            const email = document.getElementById('email').value;
-            const passoword = document.getElementById('password').value;
+  <nav>
+    <a href="index.html">Home</a>
+    <a href="quiz.html">Quiz</a>
+    <a href="questions.html">Questions</a>
+  </nav>
 
-            if (email === validCredentials.email && password === validCredentials.password) {
-                alert('Login Success, you are redirecting to quiz page');
-                window.location.href = "quiz.html";
-            }
-            else {
-                    alert('Invalid credentials, please try again.');
-                }
-            
-        }
-    </script>
+  <form id="login-form">
+    <h1>Login</h1>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="password" id="password" placeholder="Password" required>
+    <button type="submit">Login</button>
+  </form>
+
+  <script>
+    const validCredentials = { email: "empher@gmail.com", password: "empher@123" };
+
+    document.getElementById('login-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const email = document.getElementById('email').value;
+      const password = document.getElementById('password').value;
+
+      if (email === validCredentials.email && password === validCredentials.password) {
+        alert('Login Success, you are redirecting to quiz page');
+        window.location.href = "quiz.html";
+      } else {
+        alert('Invalid credentials. Please try again.');
+      }
+    });
+  </script>
 </body>
-
 </html>
